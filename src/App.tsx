@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
 
 const { myAPI } = window;
 
@@ -37,9 +37,7 @@ function App() {
         >
           Learn React
         </a>
-        <p>
-          {text}
-        </p>
+        <p>{text}</p>
       </header>
     </div>
   );
