@@ -1,44 +1,59 @@
-import React, { useState, useEffect } from "react";
-import logo from "./logo.svg";
+import React, { useState } from "react";
 import "./App.css";
+import { TopBar, SideBar, GameList } from "./components";
+import { GameGroup } from "./interfaces";
 
-const { myAPI } = window;
+// const { myAPI } = window;
+
+const gameGroups: GameGroup[] = [
+  {
+    id: "g1",
+    name: "group1",
+    games: [
+      {
+        name: "game1-1",
+        path: "c/d1.exe",
+        fav: false,
+        tags: [],
+      },
+      {
+        name: "game1-2",
+        path: "c/d2.exe",
+        fav: true,
+        tags: ["tag1", "tag2"],
+      },
+    ],
+  },
+  {
+    id: "g2",
+    name: "group2",
+    games: [
+      {
+        name: "game2-1",
+        path: "c/d1.exe",
+        fav: false,
+        tags: [],
+      },
+      {
+        name: "game2-2",
+        path: "c/d2.exe",
+        fav: true,
+        tags: ["tag1", "tag2"],
+      },
+    ],
+  },
+];
 
 function App() {
-  const [text, setText] = useState("not loaded");
-
-  useEffect(() => {
-    const f = async () => {
-      setText("loading...");
-      try {
-        const dirs = await myAPI.readDir();
-        myAPI.save("uni-uni");
-        setText(`files are: ${dirs.join(", ")}`);
-      } catch (e) {
-        setText("loading was failed");
-        alert(e);
-      }
-    };
-    f();
-  }, []);
+  const [openSideBar, setOpenSideBar] = useState(false);
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <p>{text}</p>
-      </header>
+      <TopBar onClickMenu={() => setOpenSideBar(true)} />
+      <SideBar open={openSideBar} requestClose={() => setOpenSideBar(false)} />
+      <div>
+        <GameList groups={gameGroups} />
+      </div>
     </div>
   );
 }
