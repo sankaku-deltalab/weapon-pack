@@ -47,9 +47,13 @@ const GameGroupElement = (
       </ListItem>
       {group.games.map((game) => {
         return (
-          <Collapse key={game.path} in={open} timeout="auto" unmountOnExit>
+          <Collapse key={game.absPath} in={open} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button className={classes.nested}>
+              <ListItem
+                button
+                className={classes.nested}
+                onClick={() => window.myAPI.executeGame(game.absPath)}
+              >
                 <ListItemIcon>{game.fav ? <Star /> : <></>}</ListItemIcon>
                 <ListItemText primary={game.name} />
               </ListItem>

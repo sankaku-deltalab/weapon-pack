@@ -1,0 +1,1 @@
+Unable to create SDL screen: DirectDrawSurface::Release: Unknown DirectDraw error: 0x1

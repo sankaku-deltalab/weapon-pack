@@ -6,7 +6,7 @@ export interface GameGroup {
 
 export interface Game {
   name: string;
-  path: string;
+  absPath: string;
   fav: boolean;
   tags: string[];
 }

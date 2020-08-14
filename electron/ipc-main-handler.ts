@@ -1,6 +1,8 @@
 import { ipcMain } from "electron";
 import * as Store from "electron-store";
 import * as fs from "fs";
+import * as path from "path";
+import * as spawn from "cross-spawn";
 
 export const initIpcMain = (): void => {
   const store = new Store();
@@ -8,5 +10,9 @@ export const initIpcMain = (): void => {
   ipcMain.handle("save", (event, str: string) => {
     store.set("unicorn", str);
     console.log(`save: ${str}`);
+  });
+  ipcMain.handle("execute-game", (event, filePath: string): void => {
+    const dirPath = path.dirname(filePath);
+    spawn(filePath, [], { cwd: dirPath });
   });
 };

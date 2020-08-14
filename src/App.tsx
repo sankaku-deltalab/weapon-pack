@@ -3,8 +3,6 @@ import "./App.css";
 import { TopBar, SideBar, GameList } from "./components";
 import { GameGroup } from "./interfaces";
 
-// const { myAPI } = window;
-
 const gameGroups: GameGroup[] = [
   {
     id: "g1",
@@ -12,13 +10,13 @@ const gameGroups: GameGroup[] = [
     games: [
       {
         name: "game1-1",
-        path: "c/d1.exe",
+        absPath: "/c/d1.exe",
         fav: false,
         tags: [],
       },
       {
         name: "game1-2",
-        path: "c/d2.exe",
+        absPath: "/c/d2.exe",
         fav: true,
         tags: ["tag1", "tag2"],
       },
@@ -30,13 +28,13 @@ const gameGroups: GameGroup[] = [
     games: [
       {
         name: "game2-1",
-        path: "c/d1.exe",
+        absPath: "/e/d1.exe",
         fav: false,
         tags: [],
       },
       {
         name: "game2-2",
-        path: "c/d2.exe",
+        absPath: "/e/d2.exe",
         fav: true,
         tags: ["tag1", "tag2"],
       },
