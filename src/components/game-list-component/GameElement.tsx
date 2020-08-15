@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   ListItem,
   ListItemIcon,
   makeStyles,
   IconButton,
   TextField,
+  Menu,
+  MenuItem,
 } from "@material-ui/core";
 import {
   Star as StarIcon,
   StarBorder as StarBorderIcon,
   PlayArrow as PlayIcon,
+  MoreVert as MoreVertIcon,
 } from "@material-ui/icons";
 import { GameInfo } from "../../../@types/save";
 
@@ -34,10 +37,25 @@ export default function GameElement(
   props: GameElementProps
 ): React.ReactElement<GameElementProps> {
   const [gameName, setGameName] = useState(props.game.name);
+  const [openMenu, setOpenMenu] = useState(false);
+  const [hideGame, setHideGame] = useState(props.game.hide);
+  const menuAnchorRef = useRef(null);
 
   const classes = useStyles();
-
   const game = props.game;
+
+  const favIcon = (
+    <IconButton
+      color={game.isFavorite ? "primary" : "default"}
+      onClick={() => {
+        myAPI.updateGames([{ ...game, isFavorite: !game.isFavorite }]);
+        game.isFavorite = !game.isFavorite;
+      }}
+    >
+      {game.isFavorite ? <StarIcon /> : <StarBorderIcon />}
+    </IconButton>
+  );
+
   return (
     <ListItem className={classes.nested}>
       <ListItemIcon>
@@ -45,20 +63,11 @@ export default function GameElement(
           <PlayIcon />
         </IconButton>
       </ListItemIcon>
-      <ListItemIcon>
-        <IconButton
-          color={game.isFavorite ? "primary" : "default"}
-          onClick={() => {
-            myAPI.updateGames([{ ...game, isFavorite: !game.isFavorite }]);
-            game.isFavorite = !game.isFavorite;
-          }}
-        >
-          {game.isFavorite ? <StarIcon /> : <StarBorderIcon />}
-        </IconButton>
-      </ListItemIcon>
+      <ListItemIcon>{favIcon}</ListItemIcon>
       <TextField
         fullWidth
         value={gameName}
+        variant={hideGame ? "filled" : undefined}
         onChange={(e) => {
           const name = e.target.value;
           setGameName(name);
@@ -74,6 +83,32 @@ export default function GameElement(
           game.name = gameName;
         }}
       />
+      <ListItemIcon>
+        <IconButton onClick={() => setOpenMenu(true)}>
+          <MoreVertIcon ref={menuAnchorRef} />
+        </IconButton>
+        <Menu
+          id="lock-menu"
+          anchorEl={menuAnchorRef.current}
+          keepMounted
+          open={openMenu}
+          onClose={() => {
+            console.log("close menu", openMenu);
+            setOpenMenu(false);
+          }}
+        >
+          <MenuItem
+            key={"toggle-hide-game"}
+            onClick={() => {
+              myAPI.updateGames([{ ...game, hide: !hideGame }]);
+              setHideGame(!hideGame);
+              game.hide = !game.hide;
+            }}
+          >
+            {hideGame ? "un-hide" : "hide"}
+          </MenuItem>
+        </Menu>
+      </ListItemIcon>
     </ListItem>
   );
 }
