@@ -7,6 +7,12 @@ import * as glob from "glob";
 import * as uuid from "uuid";
 import { GameInfo, RootDirectoryInfo } from "../@types/save";
 
+const shortenPath = (filePath: string): string => {
+  const tips = filePath.split("/");
+  if (tips.length <= 3) return filePath;
+  return tips.slice(tips.length - 3).join(path.sep);
+};
+
 const globAsync = promisify(glob);
 
 const store = new Store<{
@@ -84,7 +90,7 @@ const scanGames = async (): Promise<GameInfo[]> => {
   // add existing games
   for (const gamePath of gamePaths) {
     if (games.has(gamePath)) continue;
-    games.set(gamePath, createDefaultGame(gamePath));
+    games.set(gamePath, createDefaultGame(shortenPath(gamePath)));
   }
 
   saveGames(Object.fromEntries(games));
