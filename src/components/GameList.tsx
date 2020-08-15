@@ -1,20 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {
-  List,
-  ListItem,
-  ListItemIcon,
-  makeStyles,
-  ListItemText,
-  Collapse,
-  IconButton,
-} from "@material-ui/core";
-import {
-  ExpandLess,
-  ExpandMore,
-  Star as StarIcon,
-  StarBorder as StarBorderIcon,
-  PlayArrow as PlayIcon,
-} from "@material-ui/icons";
+import { List, makeStyles } from "@material-ui/core";
+import { GameGroupElement } from "./game-list-component";
 import { GameInfo } from "../../@types/save";
 
 const useStyles = makeStyles((theme) => ({
@@ -26,8 +12,6 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: theme.spacing(4),
   },
 }));
-
-const { myAPI } = window;
 
 export interface GameGroup {
   id: string;
@@ -51,59 +35,6 @@ const createGroups = (games: GameInfo[]): GameGroup[] => {
       games: nonFavGames,
     },
   ];
-};
-
-interface GameGroupElementProps {
-  group: GameGroup;
-}
-
-const GameGroupElement = (
-  props: GameGroupElementProps
-): React.ReactElement<GameGroupElementProps> => {
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
-
-  const group = props.group;
-  return (
-    <>
-      <ListItem button onClick={() => setOpen(!open)}>
-        <ListItemText primary={group.name} />
-        {open ? <ExpandLess /> : <ExpandMore />}
-      </ListItem>
-      {group.games.map((game) => {
-        return (
-          <Collapse key={game.id} in={open} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItem className={classes.nested}>
-                <ListItemIcon>
-                  <IconButton
-                    color="primary"
-                    onClick={() => myAPI.playGame(game.id)}
-                  >
-                    <PlayIcon />
-                  </IconButton>
-                </ListItemIcon>
-                <ListItemIcon>
-                  <IconButton
-                    color={game.isFavorite ? "primary" : "default"}
-                    onClick={() => {
-                      myAPI.updateGames([
-                        { ...game, isFavorite: !game.isFavorite },
-                      ]);
-                      game.isFavorite = !game.isFavorite;
-                    }}
-                  >
-                    {game.isFavorite ? <StarIcon /> : <StarBorderIcon />}
-                  </IconButton>
-                </ListItemIcon>
-                <ListItemText primary={game.name} />
-              </ListItem>
-            </List>
-          </Collapse>
-        );
-      })}
-    </>
-  );
 };
 
 interface GameListProps {
