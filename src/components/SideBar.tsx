@@ -6,25 +6,30 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@material-ui/core";
-import { MoveToInbox as InboxIcon, Mail as MailIcon } from "@material-ui/icons";
+import { MoveToInbox as InboxIcon } from "@material-ui/icons";
 
-interface SideBar {
+interface SideBarProps {
   open: boolean;
   requestClose: () => void;
+  requestOpenRootDirectoryDialog: () => void;
 }
 
-export default function SideBar(props: SideBar): React.ReactElement<SideBar> {
+export default function SideBar(
+  props: SideBarProps
+): React.ReactElement<SideBarProps> {
   return (
     <Drawer open={props.open} onClose={props.requestClose}>
       <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
+        <ListItem
+          button
+          key="root-directory-dialog"
+          onClick={props.requestOpenRootDirectoryDialog}
+        >
+          <ListItemIcon>
+            <InboxIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Edit root directories"} />
+        </ListItem>
       </List>
     </Drawer>
   );

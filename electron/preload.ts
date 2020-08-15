@@ -5,7 +5,7 @@ contextBridge.exposeInMainWorld("myAPI", {
   executeGame: (path: string) => ipcRenderer.invoke("execute-game", path),
   playGame: (gameId: string) => ipcRenderer.invoke("play-game", gameId),
   loadRootDirectories: () => ipcRenderer.invoke("load-root-directories"),
-  loadGames: () => ipcRenderer.invoke("load-game"),
+  loadGames: () => ipcRenderer.invoke("load-games"),
   scanGames: () => ipcRenderer.invoke("scan-games"),
   saveRootDirectories: (roots: RootDirectoryInfo[]) =>
     ipcRenderer.invoke("save-root-directories", roots),

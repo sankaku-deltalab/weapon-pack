@@ -10,7 +10,8 @@ import {
 import {
   ExpandLess,
   ExpandMore,
-  Star,
+  Star as StarIcon,
+  StarBorder as StarBorderIcon,
   MoveToInbox as InboxIcon,
 } from "@material-ui/icons";
 import { GameGroup } from "../interfaces";
@@ -47,14 +48,16 @@ const GameGroupElement = (
       </ListItem>
       {group.games.map((game) => {
         return (
-          <Collapse key={game.absPath} in={open} timeout="auto" unmountOnExit>
+          <Collapse key={game.id} in={open} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               <ListItem
                 button
                 className={classes.nested}
-                onClick={() => window.myAPI.executeGame(game.absPath)}
+                onClick={() => window.myAPI.playGame(game.id)}
               >
-                <ListItemIcon>{game.fav ? <Star /> : <></>}</ListItemIcon>
+                <ListItemIcon>
+                  {game.isFavorite ? <StarIcon /> : <StarBorderIcon />}
+                </ListItemIcon>
                 <ListItemText primary={game.name} />
               </ListItem>
             </List>

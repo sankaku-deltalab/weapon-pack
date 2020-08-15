@@ -1,57 +1,61 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
-import { TopBar, SideBar, GameList } from "./components";
+import { TopBar, SideBar, GameList, RootDirectoryDialog } from "./components";
 import { GameGroup } from "./interfaces";
 
-const gameGroups: GameGroup[] = [
-  {
-    id: "g1",
-    name: "group1",
-    games: [
-      {
-        name: "game1-1",
-        absPath: "/c/d1.exe",
-        fav: false,
-        tags: [],
-      },
-      {
-        name: "game1-2",
-        absPath: "/c/d2.exe",
-        fav: true,
-        tags: ["tag1", "tag2"],
-      },
-    ],
-  },
-  {
-    id: "g2",
-    name: "group2",
-    games: [
-      {
-        name: "game2-1",
-        absPath: "/e/d1.exe",
-        fav: false,
-        tags: [],
-      },
-      {
-        name: "game2-2",
-        absPath: "/e/d2.exe",
-        fav: true,
-        tags: ["tag1", "tag2"],
-      },
-    ],
-  },
-];
+const { myAPI } = window;
+
+const loadGameGroups = async (): Promise<GameGroup[]> => {
+  const games = await myAPI.loadGames();
+  // TODO: Use fav only now
+  const favGames = games.filter((g) => g.isFavorite);
+  const nonFavGames = games.filter((g) => !g.isFavorite);
+  return [
+    {
+      id: "fav",
+      name: "fav",
+      games: favGames,
+    },
+    {
+      id: "non-fav",
+      name: "non-fav",
+      games: nonFavGames,
+    },
+  ];
+};
 
 function App() {
   const [openSideBar, setOpenSideBar] = useState(false);
+  const [openEditRoot, setOpenEditRoot] = useState(false);
+  const [gameGroups, setGameGroups] = useState<GameGroup[]>([]);
+
+  useEffect(() => {
+    const f = async () => {
+      const groups = await loadGameGroups();
+      setGameGroups(groups);
+    };
+    f();
+  }, []);
 
   return (
     <div className="App">
       <TopBar onClickMenu={() => setOpenSideBar(true)} />
-      <SideBar open={openSideBar} requestClose={() => setOpenSideBar(false)} />
+      <SideBar
+        open={openSideBar}
+        requestClose={() => setOpenSideBar(false)}
+        requestOpenRootDirectoryDialog={() => setOpenEditRoot(true)}
+      />
       <div>
         <GameList groups={gameGroups} />
       </div>
+      <RootDirectoryDialog
+        open={openEditRoot}
+        requestCloseSelf={() => setOpenEditRoot(false)}
+        onRootsChanged={async () => {
+          const groups = await loadGameGroups();
+          setGameGroups(groups);
+        }}
+      />
     </div>
   );
 }

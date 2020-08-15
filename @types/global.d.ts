@@ -1,3 +1,5 @@
+import { RootDirectoryInfo, GameInfo } from "./save";
+
 declare global {
   interface Window {
     myAPI: Sandbox;
@@ -10,15 +12,15 @@ export interface Sandbox {
    * Load games and execute game.
    * @param gameId Game id.
    */
-  playGame: (gameId: string) => void;
+  playGame: (gameId: string) => Promise<void>;
   /**
    * Load root directories.
    */
-  loadRootDirectories: () => RootDirectoryInfo[];
+  loadRootDirectories: () => Promise<RootDirectoryInfo[]>;
   /**
    * Load games.
    */
-  loadGames: () => GameInfo[];
+  loadGames: () => Promise<GameInfo[]>;
   /**
    * Scan games from root directories and save them.
    */
@@ -27,10 +29,10 @@ export interface Sandbox {
    * Save root directories.
    * @param roots Root directory infos.
    */
-  saveRootDirectories: (roots: RootDirectoryInfo[]) => void;
+  saveRootDirectories: (roots: RootDirectoryInfo[]) => Promise<void>;
   /**
    * Update existing games info.
    * @param games Updating games.
    */
-  updateGames: (games: GameInfo[]) => GameInfo[];
+  updateGames: (games: GameInfo[]) => Promise<GameInfo[]>;
 }
