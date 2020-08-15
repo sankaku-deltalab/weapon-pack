@@ -6,13 +6,14 @@ import {
   makeStyles,
   ListItemText,
   Collapse,
+  IconButton,
 } from "@material-ui/core";
 import {
   ExpandLess,
   ExpandMore,
   Star as StarIcon,
   StarBorder as StarBorderIcon,
-  MoveToInbox as InboxIcon,
+  PlayArrow as PlayIcon,
 } from "@material-ui/icons";
 import { GameGroup } from "../interfaces";
 
@@ -25,6 +26,8 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: theme.spacing(4),
   },
 }));
+
+const { myAPI } = window;
 
 interface GameGroupElementProps {
   group: GameGroup;
@@ -40,9 +43,6 @@ const GameGroupElement = (
   return (
     <>
       <ListItem button onClick={() => setOpen(!open)}>
-        <ListItemIcon>
-          <InboxIcon />
-        </ListItemIcon>
         <ListItemText primary={group.name} />
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
@@ -50,13 +50,27 @@ const GameGroupElement = (
         return (
           <Collapse key={game.id} in={open} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem
-                button
-                className={classes.nested}
-                onClick={() => window.myAPI.playGame(game.id)}
-              >
+              <ListItem className={classes.nested}>
                 <ListItemIcon>
-                  {game.isFavorite ? <StarIcon /> : <StarBorderIcon />}
+                  <IconButton
+                    color="primary"
+                    onClick={() => myAPI.playGame(game.id)}
+                  >
+                    <PlayIcon />
+                  </IconButton>
+                </ListItemIcon>
+                <ListItemIcon>
+                  <IconButton
+                    color={game.isFavorite ? "primary" : "default"}
+                    onClick={() => {
+                      myAPI.updateGames([
+                        { ...game, isFavorite: !game.isFavorite },
+                      ]);
+                      game.isFavorite = !game.isFavorite;
+                    }}
+                  >
+                    {game.isFavorite ? <StarIcon /> : <StarBorderIcon />}
+                  </IconButton>
                 </ListItemIcon>
                 <ListItemText primary={game.name} />
               </ListItem>
