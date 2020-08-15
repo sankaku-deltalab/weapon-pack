@@ -17,10 +17,6 @@ import {
 import { GameInfo } from "../../../@types/save";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-    backgroundColor: theme.palette.background.paper,
-  },
   nested: {
     paddingLeft: theme.spacing(4),
   },
@@ -57,7 +53,7 @@ export default function GameElement(
   );
 
   return (
-    <ListItem className={classes.nested}>
+    <ListItem className={classes.nested} dense divider>
       <ListItemIcon>
         <IconButton color="primary" onClick={() => myAPI.playGame(game.id)}>
           <PlayIcon />

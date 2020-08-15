@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core";
 import "./App.css";
 import { TopBar, SideBar, GameList, RootDirectoryDialog } from "./components";
 import { GameInfo } from "../@types/save";
 
 const { myAPI } = window;
+
+const darkTheme = createMuiTheme({
+  palette: {
+    type: "dark",
+  },
+});
 
 const loadGames = async (): Promise<GameInfo[]> => {
   return await myAPI.loadGames();
@@ -25,23 +32,25 @@ function App() {
 
   return (
     <div className="App">
-      <TopBar onClickMenu={() => setOpenSideBar(true)} />
-      <SideBar
-        open={openSideBar}
-        requestClose={() => setOpenSideBar(false)}
-        requestOpenRootDirectoryDialog={() => setOpenEditRoot(true)}
-        showAllGames={showAllGames}
-        requestChangeShowAllGames={setShowAllGames}
-      />
-      <GameList games={games} showAllGames={showAllGames} />
-      <RootDirectoryDialog
-        open={openEditRoot}
-        requestCloseSelf={() => setOpenEditRoot(false)}
-        onRootsChanged={async () => {
-          const newGames = await loadGames();
-          setGames(newGames);
-        }}
-      />
+      <ThemeProvider theme={darkTheme}>
+        <TopBar onClickMenu={() => setOpenSideBar(true)} />
+        <SideBar
+          open={openSideBar}
+          requestClose={() => setOpenSideBar(false)}
+          requestOpenRootDirectoryDialog={() => setOpenEditRoot(true)}
+          showAllGames={showAllGames}
+          requestChangeShowAllGames={setShowAllGames}
+        />
+        <GameList games={games} showAllGames={showAllGames} />
+        <RootDirectoryDialog
+          open={openEditRoot}
+          requestCloseSelf={() => setOpenEditRoot(false)}
+          onRootsChanged={async () => {
+            const newGames = await loadGames();
+            setGames(newGames);
+          }}
+        />
+      </ThemeProvider>
     </div>
   );
 }

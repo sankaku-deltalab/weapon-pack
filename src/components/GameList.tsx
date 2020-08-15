@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { List, makeStyles } from "@material-ui/core";
+import { List, Card, makeStyles } from "@material-ui/core";
 import { GameGroupElement } from "./game-list-component";
 import { GameInfo } from "../../@types/save";
 
@@ -7,9 +7,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
     backgroundColor: theme.palette.background.paper,
-  },
-  nested: {
-    paddingLeft: theme.spacing(4),
   },
 }));
 
@@ -54,20 +51,22 @@ export default function GameList(
   }, [props.games]);
 
   return (
-    <List
-      component="nav"
-      aria-labelledby="nested-list-subheader"
-      className={classes.root}
-    >
-      {gameGroups.map((group) => {
-        return (
-          <GameGroupElement
-            key={group.id}
-            group={group}
-            showAllGames={props.showAllGames}
-          />
-        );
-      })}
-    </List>
+    <Card>
+      <List
+        component="nav"
+        aria-labelledby="nested-list-subheader"
+        className={classes.root}
+      >
+        {gameGroups.map((group) => {
+          return (
+            <GameGroupElement
+              key={group.id}
+              group={group}
+              showAllGames={props.showAllGames}
+            />
+          );
+        })}
+      </List>
+    </Card>
   );
 }
