@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   ListItem,
   ListItemIcon,
@@ -32,11 +32,13 @@ interface GameElementProps {
 export default function GameElement(
   props: GameElementProps
 ): React.ReactElement<GameElementProps> {
+  const [gameName, setGameName] = useState(props.game.name);
+
   const classes = useStyles();
 
   const game = props.game;
   return (
-    <ListItem key={game.id} className={classes.nested}>
+    <ListItem className={classes.nested}>
       <ListItemIcon>
         <IconButton color="primary" onClick={() => myAPI.playGame(game.id)}>
           <PlayIcon />
@@ -53,7 +55,24 @@ export default function GameElement(
           {game.isFavorite ? <StarIcon /> : <StarBorderIcon />}
         </IconButton>
       </ListItemIcon>
-      <TextField fullWidth value={game.name} />
+      <TextField
+        fullWidth
+        value={gameName}
+        onChange={(e) => {
+          const name = e.target.value;
+          setGameName(name);
+        }}
+        onKeyDown={(e) => {
+          if (e.keyCode !== 13) return;
+          myAPI.updateGames([{ ...game, name: gameName }]);
+          game.name = gameName;
+        }}
+        onBlur={(e) => {
+          if (gameName === game.name) return;
+          myAPI.updateGames([{ ...game, name: gameName }]);
+          game.name = gameName;
+        }}
+      />
     </ListItem>
   );
 }

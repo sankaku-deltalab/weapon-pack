@@ -22,14 +22,14 @@ export default function GameGroupElement(
   const group = props.group;
   return (
     <>
-      <ListItem button onClick={() => setOpen(!open)}>
+      <ListItem button key={`${group.id}/root`} onClick={() => setOpen(!open)}>
         <ListItemText primary={group.name} />
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
-      <Collapse key={group.id} in={open} timeout="auto">
+      <Collapse key={`${group.id}/child`} in={open} timeout="auto">
         <List component="div" disablePadding>
           {group.games.map((game) => (
-            <GameElement game={game} />
+            <GameElement game={game} key={game.id} />
           ))}
         </List>
       </Collapse>
