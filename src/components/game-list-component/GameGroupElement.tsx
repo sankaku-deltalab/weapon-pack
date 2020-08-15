@@ -12,12 +12,14 @@ export interface GameGroup {
 
 interface GameGroupElementProps {
   group: GameGroup;
+  showAllGames: boolean;
 }
 
 export default function GameGroupElement(
   props: GameGroupElementProps
 ): React.ReactElement<GameGroupElementProps> {
   const [open, setOpen] = React.useState(true);
+  const showGame = (g: GameInfo) => props.showAllGames || !g.hide;
 
   const group = props.group;
   return (
@@ -28,9 +30,15 @@ export default function GameGroupElement(
       </ListItem>
       <Collapse key={`${group.id}/child`} in={open} timeout="auto">
         <List component="div" disablePadding>
-          {group.games.map((game) => (
-            <GameElement game={game} key={game.id} />
-          ))}
+          {group.games
+            .filter((g) => showGame(g))
+            .map((game) => (
+              <GameElement
+                key={game.id}
+                game={game}
+                showAllGames={props.showAllGames}
+              />
+            ))}
         </List>
       </Collapse>
     </>

@@ -27,6 +27,7 @@ const { myAPI } = window;
 
 interface GameElementProps {
   game: GameInfo;
+  showAllGames: boolean;
 }
 
 export default function GameElement(

@@ -13,6 +13,7 @@ function App() {
   const [openSideBar, setOpenSideBar] = useState(false);
   const [openEditRoot, setOpenEditRoot] = useState(false);
   const [games, setGames] = useState<GameInfo[]>([]);
+  const [showAllGames, setShowAllGames] = useState(false);
 
   useEffect(() => {
     const f = async () => {
@@ -29,8 +30,10 @@ function App() {
         open={openSideBar}
         requestClose={() => setOpenSideBar(false)}
         requestOpenRootDirectoryDialog={() => setOpenEditRoot(true)}
+        showAllGames={showAllGames}
+        requestChangeShowAllGames={setShowAllGames}
       />
-      <GameList games={games} />
+      <GameList games={games} showAllGames={showAllGames} />
       <RootDirectoryDialog
         open={openEditRoot}
         requestCloseSelf={() => setOpenEditRoot(false)}
