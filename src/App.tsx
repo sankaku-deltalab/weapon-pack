@@ -31,6 +31,16 @@ function App() {
     f();
   }, [games]);
 
+  useEffect(() => {
+    const f = async () => {
+      const roots = await myAPI.loadRootDirectories();
+      if (roots.length === 0) {
+        setOpenEditRoot(true);
+      }
+    };
+    f();
+  }, []);
+
   return (
     <div className="App">
       <ThemeProvider theme={darkTheme}>
