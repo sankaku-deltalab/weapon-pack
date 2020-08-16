@@ -7,9 +7,9 @@ import {
   ListItemText,
 } from "@material-ui/core";
 import {
-  MoveToInbox as InboxIcon,
   CheckBox as CheckBoxIcon,
   CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon,
+  Folder as FolderIcon,
 } from "@material-ui/icons";
 
 interface SideBarProps {
@@ -30,7 +30,7 @@ export default function SideBar(
       onClick={props.requestOpenRootDirectoryDialog}
     >
       <ListItemIcon>
-        <InboxIcon />
+        <FolderIcon />
       </ListItemIcon>
       <ListItemText primary={"Edit root directories"} />
     </ListItem>
