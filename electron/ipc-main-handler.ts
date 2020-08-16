@@ -75,8 +75,9 @@ const scanGames = async (): Promise<GameInfo[]> => {
   const games = new Map(Object.entries(loadGamesRaw()));
 
   // scan games
+  // NOTE: glob nocase option is not available in my env
   const scanning = roots.map((r) =>
-    globAsync(path.join(r.absPath, "**/*.exe"))
+    globAsync(path.join(r.absPath, "**/*.{exe,EXE}"))
   );
   const scanned = await Promise.all(scanning);
   const gamePaths = new Set(scanned.flat());
