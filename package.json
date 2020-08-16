@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "./",
   "main": "build/electron/main.js",
-  "author": "Sankaku",
+  "author": "DeltaLab",
   "description": "Local game manager",
   "build": {
     "extends": null,
