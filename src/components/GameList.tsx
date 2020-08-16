@@ -37,6 +37,7 @@ const createGroups = (games: GameInfo[]): GameGroup[] => {
 interface GameListProps {
   games: GameInfo[];
   showAllGames: boolean;
+  searchText: string;
 }
 
 export default function GameList(
@@ -63,6 +64,7 @@ export default function GameList(
               key={group.id}
               group={group}
               showAllGames={props.showAllGames}
+              searchText={props.searchText}
             />
           );
         })}

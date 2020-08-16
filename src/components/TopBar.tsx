@@ -11,6 +11,7 @@ import SearchIcon from "@material-ui/icons/Search";
 
 interface TopBarProps {
   onClickMenu: () => void;
+  onChangeSearchText: (text: string) => void;
 }
 
 export default function TopBar(
@@ -37,6 +38,7 @@ export default function TopBar(
                 </InputAdornment>
               ),
             }}
+            onChange={(e) => props.onChangeSearchText(e.target.value)}
           />
         </Toolbar>
       </AppBar>

@@ -13,13 +13,16 @@ export interface GameGroup {
 interface GameGroupElementProps {
   group: GameGroup;
   showAllGames: boolean;
+  searchText: string;
 }
 
 export default function GameGroupElement(
   props: GameGroupElementProps
 ): React.ReactElement<GameGroupElementProps> {
   const [open, setOpen] = React.useState(true);
-  const showGame = (g: GameInfo) => props.showAllGames || !g.hide;
+  const showGame = (g: GameInfo) =>
+    (props.showAllGames || !g.hide) &&
+    g.name.toLowerCase().includes(props.searchText.toLowerCase());
 
   const group = props.group;
   return (
