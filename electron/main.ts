@@ -43,6 +43,8 @@ function createWindow() {
   // Open the DevTools.
   if (isDev) {
     win.webContents.openDevTools();
+  } else {
+    win.removeMenu();
   }
 }
 
