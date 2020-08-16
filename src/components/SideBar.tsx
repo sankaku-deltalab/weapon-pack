@@ -32,7 +32,7 @@ export default function SideBar(
       <ListItemIcon>
         <FolderIcon />
       </ListItemIcon>
-      <ListItemText primary={"Edit root directories"} />
+      <ListItemText primary={"Edit game directories"} />
     </ListItem>
   );
 
