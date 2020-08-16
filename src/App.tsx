@@ -47,6 +47,10 @@ function App() {
         <TopBar
           onClickMenu={() => setOpenSideBar(true)}
           onChangeSearchText={setSearchText}
+          requestScanGames={async () => {
+            const newGames = await myAPI.scanGames();
+            setGames(newGames);
+          }}
         />
         <SideBar
           open={openSideBar}
@@ -63,8 +67,8 @@ function App() {
         <RootDirectoryDialog
           open={openEditRoot}
           requestCloseSelf={() => setOpenEditRoot(false)}
-          onRootsChanged={async () => {
-            const newGames = await loadGames();
+          requestScanGames={async () => {
+            const newGames = await myAPI.scanGames();
             setGames(newGames);
           }}
         />

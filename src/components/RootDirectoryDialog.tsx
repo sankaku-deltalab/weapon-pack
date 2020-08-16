@@ -24,7 +24,7 @@ const submitDirs = (text: string) => {
 interface RootDirectoryDialogProps {
   open: boolean;
   requestCloseSelf: () => void;
-  onRootsChanged: () => void;
+  requestScanGames: () => void;
 }
 
 export default function RootDirectoryDialog(
@@ -42,9 +42,8 @@ export default function RootDirectoryDialog(
 
   const submit = async (text: string) => {
     submitDirs(text);
-    await myAPI.scanGames();
-    props.onRootsChanged();
     props.requestCloseSelf();
+    props.requestScanGames();
   };
 
   return (
