@@ -7,14 +7,17 @@ import {
   DialogContent,
   DialogTitle,
 } from "@material-ui/core";
+import * as path from "path";
 
 const { myAPI } = window;
 
 const submitDirs = (text: string) => {
   const dirs = text.split(/\r\n|\n/);
-  const roots = dirs.map((d) => ({
-    absPath: d,
-  }));
+  const roots = dirs
+    .filter((d) => path.isAbsolute(d))
+    .map((d) => ({
+      absPath: d,
+    }));
   myAPI.saveRootDirectories(roots);
 };
 
