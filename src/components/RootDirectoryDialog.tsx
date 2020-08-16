@@ -7,14 +7,14 @@ import {
   DialogContent,
   DialogTitle,
 } from "@material-ui/core";
-import * as path from "path";
+import isAbsolute from "is-absolute";
 
 const { myAPI } = window;
 
 const submitDirs = (text: string) => {
   const dirs = text.split(/\r\n|\n/);
   const roots = dirs
-    .filter((d) => path.isAbsolute(d))
+    .filter((d) => isAbsolute.win32(d))
     .map((d) => ({
       absPath: d,
     }));
