@@ -38,6 +38,7 @@ interface GameListProps {
   games: GameInfo[];
   showAllGames: boolean;
   searchText: string;
+  requestUpdateGames: (games: GameInfo[]) => Promise<void>;
 }
 
 export default function GameList(
@@ -65,6 +66,7 @@ export default function GameList(
               group={group}
               showAllGames={props.showAllGames}
               searchText={props.searchText}
+              requestUpdateGames={props.requestUpdateGames}
             />
           );
         })}

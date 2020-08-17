@@ -14,6 +14,7 @@ interface GameGroupElementProps {
   group: GameGroup;
   showAllGames: boolean;
   searchText: string;
+  requestUpdateGames: (games: GameInfo[]) => Promise<void>;
 }
 
 export default function GameGroupElement(
@@ -40,6 +41,7 @@ export default function GameGroupElement(
                 key={game.id}
                 game={game}
                 showAllGames={props.showAllGames}
+                requestUpdateGame={(g) => props.requestUpdateGames([g])}
               />
             ))}
         </List>

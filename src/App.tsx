@@ -29,7 +29,7 @@ function App() {
       setGames(newGames);
     };
     f();
-  }, [games]);
+  }, []);
 
   useEffect(() => {
     const f = async () => {
@@ -63,6 +63,10 @@ function App() {
           games={games}
           showAllGames={showAllGames}
           searchText={searchText}
+          requestUpdateGames={async (gs) => {
+            const newGames = await myAPI.updateGames(gs);
+            setGames(newGames);
+          }}
         />
         <RootDirectoryDialog
           open={openEditRoot}

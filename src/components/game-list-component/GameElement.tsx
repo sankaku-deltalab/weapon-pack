@@ -27,56 +27,57 @@ const { myAPI } = window;
 interface GameElementProps {
   game: GameInfo;
   showAllGames: boolean;
+  requestUpdateGame: (game: GameInfo) => Promise<void>;
 }
 
 export default function GameElement(
   props: GameElementProps
 ): React.ReactElement<GameElementProps> {
-  const [gameName, setGameName] = useState(props.game.name);
   const [openMenu, setOpenMenu] = useState(false);
-  const [hideGame, setHideGame] = useState(props.game.hide);
+  const [gameView, setGameView] = useState(props.game);
   const menuAnchorRef = useRef(null);
 
+  const updateRealGame = (newGame: GameInfo) => {
+    props.requestUpdateGame(newGame);
+  };
+
   const classes = useStyles();
-  const game = props.game;
 
   const favIcon = (
     <IconButton
-      color={game.isFavorite ? "primary" : "default"}
+      color={gameView.isFavorite ? "primary" : "default"}
       onClick={() => {
-        myAPI.updateGames([{ ...game, isFavorite: !game.isFavorite }]);
-        game.isFavorite = !game.isFavorite;
+        const newGame = { ...gameView, isFavorite: !gameView.isFavorite };
+        setGameView(newGame);
+        updateRealGame(newGame);
       }}
     >
-      {game.isFavorite ? <StarIcon /> : <StarBorderIcon />}
+      {gameView.isFavorite ? <StarIcon /> : <StarBorderIcon />}
     </IconButton>
   );
 
   return (
     <ListItem className={classes.nested} dense divider>
       <ListItemIcon>
-        <IconButton color="primary" onClick={() => myAPI.playGame(game.id)}>
+        <IconButton color="primary" onClick={() => myAPI.playGame(gameView.id)}>
           <PlayIcon />
         </IconButton>
       </ListItemIcon>
       <ListItemIcon>{favIcon}</ListItemIcon>
       <TextField
         fullWidth
-        value={gameName}
-        variant={hideGame ? "filled" : undefined}
+        value={gameView.name}
+        variant={gameView.hide ? "filled" : undefined}
         onChange={(e) => {
-          const name = e.target.value;
-          setGameName(name);
+          const newGame = { ...gameView, name: e.target.value };
+          setGameView(newGame);
         }}
         onKeyDown={(e) => {
           if (e.keyCode !== 13) return;
-          myAPI.updateGames([{ ...game, name: gameName }]);
-          game.name = gameName;
+          updateRealGame(gameView);
         }}
         onBlur={(e) => {
-          if (gameName === game.name) return;
-          myAPI.updateGames([{ ...game, name: gameName }]);
-          game.name = gameName;
+          updateRealGame(gameView);
         }}
       />
       <ListItemIcon>
@@ -89,19 +90,18 @@ export default function GameElement(
           keepMounted
           open={openMenu}
           onClose={() => {
-            console.log("close menu", openMenu);
             setOpenMenu(false);
           }}
         >
           <MenuItem
             key={"toggle-hide-game"}
             onClick={() => {
-              myAPI.updateGames([{ ...game, hide: !hideGame }]);
-              setHideGame(!hideGame);
-              game.hide = !game.hide;
+              const newGame = { ...gameView, hide: !gameView.hide };
+              setGameView(newGame);
+              updateRealGame(newGame);
             }}
           >
-            {hideGame ? "un-hide" : "hide"}
+            {gameView.hide ? "un-hide" : "hide"}
           </MenuItem>
         </Menu>
       </ListItemIcon>
