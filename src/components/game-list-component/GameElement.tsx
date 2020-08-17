@@ -98,6 +98,15 @@ export default function GameElement(
           }}
         >
           <MenuItem
+            key={"open-game-dir"}
+            onClick={(e) => {
+              myAPI.openGameDirectory(gameView.id);
+              setOpenMenu(false);
+            }}
+          >
+            Reveal in File Explorer
+          </MenuItem>
+          <MenuItem
             key={"toggle-hide-game"}
             onClick={() => {
               const newGame = { ...gameView, hide: !gameView.hide };
@@ -105,7 +114,7 @@ export default function GameElement(
               updateRealGame(newGame);
             }}
           >
-            {gameView.hide ? "un-hide" : "hide"}
+            {gameView.hide ? "Un-Hide" : "Hide"}
           </MenuItem>
         </Menu>
       </ListItemIcon>

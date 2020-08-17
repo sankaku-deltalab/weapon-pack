@@ -28,18 +28,31 @@ const saveGames = (games: Record<string, GameInfo>): void => {
   store.set("games", games);
 };
 
+const loadGameAbsPath = (gameId: string): string => {
+  const games = loadGamesRaw();
+
+  const eGames = Object.entries(games).filter(([_, g]) => g.id === gameId);
+  if (eGames.length !== 1)
+    throw new Error(`Game has id <${gameId}> was not exists in save`);
+  return eGames[0][0];
+};
+
 /**
  * Load games and execute game.
  * @param gameId Game id.
  */
 const playGame = (gameId: string): void => {
-  const games = loadGamesRaw();
-
-  const eGames = Object.entries(games).filter(([_, g]) => g.id === gameId);
-  if (eGames.length !== 1) return;
-  const gameAbsPath = eGames[0][0];
-
+  const gameAbsPath = loadGameAbsPath(gameId);
   spawn(gameAbsPath, [], { cwd: path.dirname(gameAbsPath) });
+};
+
+/**
+ * Open directory contains game.
+ * @param gameId Game id.
+ */
+const openGameDirectory = (gameId: string): void => {
+  const gameAbsPath = loadGameAbsPath(gameId);
+  spawn("explorer", ["."], { cwd: path.dirname(gameAbsPath) });
 };
 
 /**
@@ -123,6 +136,9 @@ const updateGames = (updatingGames: GameInfo[]): GameInfo[] => {
 export const initIpcMain = (): void => {
   ipcMain.handle("play-game", (event, gameId: string): void =>
     playGame(gameId)
+  );
+  ipcMain.handle("open-game-directory", (event, gameId: string): void =>
+    openGameDirectory(gameId)
   );
   ipcMain.handle("load-root-directories", (): RootDirectoryInfo[] =>
     loadRootDirs()

@@ -13,6 +13,11 @@ export interface Sandbox {
    */
   playGame: (gameId: string) => Promise<void>;
   /**
+   * Open directory contains game.
+   * @param gameId Game id.
+   */
+  openGameDirectory: (gameId: string) => Promise<void>;
+  /**
    * Load root directories.
    */
   loadRootDirectories: () => Promise<RootDirectoryInfo[]>;
