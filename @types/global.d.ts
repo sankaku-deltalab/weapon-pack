@@ -7,7 +7,6 @@ declare global {
 }
 
 export interface Sandbox {
-  executeGame: (filePath: string) => Promise<void>;
   /**
    * Load games and execute game.
    * @param gameId Game id.

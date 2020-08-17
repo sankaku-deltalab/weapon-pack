@@ -121,10 +121,6 @@ const updateGames = (updatingGames: GameInfo[]): GameInfo[] => {
 };
 
 export const initIpcMain = (): void => {
-  ipcMain.handle("execute-game", (event, filePath: string): void => {
-    const dirPath = path.dirname(filePath);
-    spawn(filePath, [], { cwd: dirPath });
-  });
   ipcMain.handle("play-game", (event, gameId: string): void =>
     playGame(gameId)
   );
