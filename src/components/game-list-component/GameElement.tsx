@@ -69,7 +69,11 @@ export default function GameElement(
         value={gameView.name}
         variant={gameView.hide ? "filled" : undefined}
         onChange={(e) => {
-          const newGame = { ...gameView, name: e.target.value };
+          const name = e.target.value;
+          const tags = [...name.matchAll(/\[(?<tag>\S+)\]/g)].map(
+            (m) => m.groups!.tag
+          );
+          const newGame = { ...gameView, name, tags };
           setGameView(newGame);
         }}
         onKeyDown={(e) => {

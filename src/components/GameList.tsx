@@ -16,22 +16,32 @@ export interface GameGroup {
   games: GameInfo[];
 }
 
+const createGroup = (
+  id: string,
+  name: string,
+  games: GameInfo[],
+  filter: (g: GameInfo) => boolean
+): GameGroup => {
+  return {
+    id,
+    name,
+    games: games.filter(filter),
+  };
+};
+
 const createGroups = (games: GameInfo[]): GameGroup[] => {
-  // TODO: Use fav only now
-  const favGames = games.filter((g) => g.isFavorite);
-  const nonFavGames = games.filter((g) => !g.isFavorite);
-  return [
-    {
-      id: "fav",
-      name: "fav",
-      games: favGames,
-    },
-    {
-      id: "non-fav",
-      name: "non-fav",
-      games: nonFavGames,
-    },
-  ];
+  const favGroup = createGroup("fav", "fav", games, (g) => g.isFavorite);
+  const tags = Array.from(new Set<string>(games.map((g) => g.tags).flat()));
+  const tagGroups = tags.map((tag) =>
+    createGroup(`tag-${tag}`, `${tag}`, games, (g) => g.tags.includes(tag))
+  );
+  const nonTagGroup = createGroup(
+    "non-tag",
+    "non-tag",
+    games,
+    (g) => g.tags.length === 0
+  );
+  return [favGroup, ...tagGroups, nonTagGroup];
 };
 
 interface GameListProps {
