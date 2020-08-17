@@ -7,12 +7,6 @@ import * as glob from "glob";
 import * as uuid from "uuid";
 import { GameInfo, RootDirectoryInfo } from "../@types/save";
 
-const shortenPath = (filePath: string): string => {
-  const tips = filePath.split("/");
-  if (tips.length <= 3) return filePath;
-  return tips.slice(tips.length - 3).join(path.sep);
-};
-
 const globAsync = promisify(glob);
 
 const store = new Store<{
@@ -80,31 +74,46 @@ const createDefaultGame = (name: string): GameInfo => {
   };
 };
 
+const scanRoots = async (
+  roots: RootDirectoryInfo[]
+): Promise<Map<string, string>> => {
+  const scanRoot = async (
+    root: RootDirectoryInfo
+  ): Promise<[string, string[]]> => {
+    // NOTE: glob nocase option is not available in my env
+    const files = await globAsync(path.join(root.absPath, "**/*.{exe,EXE}"));
+    return [root.absPath, files];
+  };
+
+  const scanning = roots.map((r) => scanRoot(r));
+  const scanned = await Promise.all(scanning);
+  const fileToName = new Map<string, string>();
+  for (const [dir, files] of scanned) {
+    for (const filePath of files) {
+      fileToName.set(filePath, path.relative(dir, filePath));
+    }
+  }
+  return fileToName;
+};
+
 /**
  * Scan games from root directories and save them.
  */
 const scanGames = async (): Promise<GameInfo[]> => {
   const roots = loadRootDirs();
+  const gameFileToName = await scanRoots(roots);
   const games = new Map(Object.entries(loadGamesRaw()));
-
-  // scan games
-  // NOTE: glob nocase option is not available in my env
-  const scanning = roots.map((r) =>
-    globAsync(path.join(r.absPath, "**/*.{exe,EXE}"))
-  );
-  const scanned = await Promise.all(scanning);
-  const gamePaths = new Set(scanned.flat());
 
   // remove non-existing games
   for (const [gamePath] of games) {
-    if (gamePaths.has(gamePath)) continue;
+    if (gameFileToName.has(gamePath)) continue;
     games.delete(gamePath);
   }
 
   // add existing games
-  for (const gamePath of gamePaths) {
+  for (const [gamePath, gameName] of gameFileToName) {
     if (games.has(gamePath)) continue;
-    games.set(gamePath, createDefaultGame(shortenPath(gamePath)));
+    games.set(gamePath, createDefaultGame(gameName));
   }
 
   saveGames(Object.fromEntries(games));
